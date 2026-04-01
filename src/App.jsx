@@ -3,36 +3,34 @@ import {
   Search, LogIn, UserPlus, FileText, BarChart3, Database, Globe, 
   ChevronRight, Bell, Download, ShieldCheck, Mail, Filter, 
   CheckCircle2, AlertCircle, BookOpen, Layers, Menu, X, ArrowRight,
-  Calendar, ExternalLink, Map as MapIcon, ChevronDown, Info
+  Calendar, ExternalLink, Map as MapIcon, ChevronDown, Info, HelpCircle
 } from 'lucide-react';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('home');
   const [purposeText, setPurposeText] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // 主题色配置
   const colors = {
     primary: '#8B0000', // 学术红
-    primaryDark: '#660000',
     accent: '#C5A059',  // 学术金
     bgGray: '#f4f4f4'
   };
 
-  // 模拟数据下载列表 (CHARLS 风格)
+  // 模拟数据下载列表
   const dataFiles = [
     { name: "用户手册 (CNSSS_2024_Manual_v1.0.pdf)", sha1: "9BF1E673136F375BEB097E88B6018BFB88855F17B", type: "PDF" },
     { name: "调查问卷 (CNSSS_2024_Main_Questionnaire.pdf)", sha1: "307FB0F902E76FD08E0722324A4CE5FA24FEC99", type: "PDF" },
-    { name: "基本信息与权重模块", sha1: "8644E8D3716EF1B31669211BEF54311453CCFB70", type: "dta / sav" },
-    { name: "体育参与及锻炼强度模块", sha1: "FD73EB699CBACBFAAFF1C55BCDBA11B23EAA0736", type: "dta / sav" },
-    { name: "体育消费与旅游支出模块", sha1: "4BDD100A72B7ED885A83C61016AA0C7E4822748", type: "dta / sav" }
+    { name: "体育参与模块", sha1: "FD73EB699CBACBFAAFF1C55BCDBA11B23EAA0736", type: "dta / sav" },
+    { name: "数字体育与社交模块", sha1: "8644E8D3716EF1B31669211BEF54311453CCFB70", type: "dta / sav" },
+    { name: "身心健康状况模块", sha1: "5433348D5D1420889ACD0A749E27E55F501038DB", type: "dta / sav" },
+    { name: "体育消费模块", sha1: "4BDD100A72B7ED885A83C61016AA0C7E4822748", type: "dta / sav" }
   ];
 
   // 视图切换处理
   const navigateTo = (view) => {
     setCurrentView(view);
     window.scrollTo(0, 0);
-    setIsMenuOpen(false);
   };
 
   // --- 子组件：页头 ---
@@ -59,11 +57,10 @@ const App = () => {
           <ul className="flex justify-center text-white text-sm font-medium">
             <li><button onClick={() => navigateTo('home')} className={`py-4 px-6 hover:bg-[#660000] transition ${currentView === 'home' ? 'bg-[#660000] border-b-2 border-[#C5A059]' : ''}`}>首页</button></li>
             <li className="relative group">
-              <button className="py-4 px-6 hover:bg-[#660000] transition flex items-center">项目介绍 <ChevronDown className="w-3 h-3 ml-1" /></button>
+              <button className={`py-4 px-6 hover:bg-[#660000] transition flex items-center ${currentView.includes('intro') ? 'bg-[#660000] border-b-2 border-[#C5A059]' : ''}`}>项目介绍 <ChevronDown className="w-3 h-3 ml-1" /></button>
               <div className="absolute hidden group-hover:block bg-white text-gray-800 shadow-xl w-40 top-full left-0 border-t-2 border-[#8B0000]">
-                <button onClick={() => navigateTo('intro')} className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b">项目概况</button>
-                <button className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b">项目团队</button>
-                <button className="w-full text-left px-4 py-2 hover:bg-gray-100">组织实施</button>
+                <button onClick={() => navigateTo('intro-overview')} className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b">项目概况</button>
+                <button onClick={() => navigateTo('intro-guide')} className="w-full text-left px-4 py-2 hover:bg-gray-100">使用说明</button>
               </div>
             </li>
             <li><button onClick={() => navigateTo('docs')} className={`py-4 px-6 hover:bg-[#660000] transition ${currentView === 'docs' ? 'bg-[#660000] border-b-2 border-[#C5A059]' : ''}`}>项目文档</button></li>
@@ -75,7 +72,7 @@ const App = () => {
     </header>
   );
 
-  // --- 视图 1: 首页 ---
+  // --- 视图: 首页 ---
   const HomeView = () => (
     <div className="animate-fadeIn space-y-12">
       <div className="flex flex-col lg:flex-row gap-8">
@@ -84,32 +81,32 @@ const App = () => {
             <div className="relative h-64 md:h-[450px] overflow-hidden">
               <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070" className="w-full h-full object-cover" alt="Survey" />
               <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white p-6">
-                <h3 className="text-xl font-bold">CNSSS 2024 全国调查数据公报要点发布</h3>
+                <h3 className="text-xl font-bold">CNSSS 2024 全国调查数据公报发布</h3>
               </div>
             </div>
           </div>
           <div className="bg-white p-8 border shadow-sm border-t-4 border-[#8B0000]">
-            <h2 className="text-xl font-bold text-[#8B0000] border-b pb-2 mb-6">项目概况</h2>
-            <div className="text-sm leading-8 text-gray-700 space-y-4">
-              <p>全国体育与社会调查（CNSSS）立足全国城乡成年居民，是国内体育领域首次大规模、综合性、连续性社会调查。项目由武汉体育学院牵头，中国人民大学中国调查与数据中心负责实施。</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6">
-                <div className="text-center p-4 bg-gray-50 rounded">
-                  <div className="text-2xl font-bold text-[#8B0000]">11,385</div>
-                  <div className="text-[10px] text-gray-500">有效成人样本</div>
-                </div>
-                <div className="text-center p-4 bg-gray-50 rounded">
-                  <div className="text-2xl font-bold text-[#8B0000]">95.1%</div>
-                  <div className="text-[10px] text-gray-500">低强度活动率</div>
-                </div>
-                <div className="text-center p-4 bg-gray-50 rounded">
-                  <div className="text-2xl font-bold text-[#8B0000]">33.9%</div>
-                  <div className="text-[10px] text-gray-500">体育人口比例</div>
-                </div>
-                <div className="text-center p-4 bg-gray-50 rounded">
-                  <div className="text-2xl font-bold text-[#8B0000]">31</div>
-                  <div className="text-[10px] text-gray-500">覆盖省区市</div>
-                </div>
+            <h2 className="text-xl font-bold text-[#8B0000] border-b pb-2 mb-6 text-center">核心调查指标</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-4">
+              <div className="text-center p-4 bg-gray-50 rounded border border-gray-100">
+                <div className="text-2xl font-bold text-[#8B0000]">11,385</div>
+                <div className="text-[10px] text-gray-500">有效成人样本</div>
               </div>
+              <div className="text-center p-4 bg-gray-50 rounded border border-gray-100">
+                <div className="text-2xl font-bold text-[#8B0000]">95.1%</div>
+                <div className="text-[10px] text-gray-500">低强度活动率</div>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded border border-gray-100">
+                <div className="text-2xl font-bold text-[#8B0000]">33.9%</div>
+                <div className="text-[10px] text-gray-500">体育人口比例</div>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded border border-gray-100">
+                <div className="text-2xl font-bold text-[#8B0000]">31</div>
+                <div className="text-[10px] text-gray-500">覆盖省区市</div>
+              </div>
+            </div>
+            <div className="mt-8 text-sm leading-8 text-gray-700 text-justify border-t pt-6">
+              <p>全国体育与社会调查（CNSSS）立足全国城乡成年居民，是国内体育领域首次大规模、综合性、连续性社会调查。2024年首次全国抽样调查已圆满完成，共获得有效样本11,385份。项目旨在为体育研究、政策制定及成果转化提供高质量的基础数据支持。</p>
             </div>
           </div>
         </div>
@@ -132,7 +129,7 @@ const App = () => {
               ))}
             </div>
           </div>
-          <div className="mt-6 bg-[#8B0000] p-6 text-white text-center rounded shadow-lg transform hover:-translate-y-1 transition-transform">
+          <div className="mt-6 bg-[#8B0000] p-6 text-white text-center rounded shadow-lg">
             <UserPlus className="w-10 h-10 mx-auto mb-4 opacity-50" />
             <h4 className="font-bold text-lg mb-2">获取科研数据</h4>
             <p className="text-[10px] opacity-70 mb-4">注册并经审核后即可免费下载学术调查数据</p>
@@ -143,14 +140,64 @@ const App = () => {
     </div>
   );
 
-  // --- 视图 2: 注册页面 (学术严谨风格) ---
+  // --- 视图: 项目介绍 ---
+  const IntroView = () => (
+    <div className="animate-fadeIn max-w-4xl mx-auto space-y-8">
+      {currentView === 'intro-overview' && (
+        <div className="bg-white p-10 border shadow-sm border-t-4 border-[#8B0000]">
+          <h2 className="text-2xl font-bold text-[#8B0000] border-b pb-2 mb-8">项目概况</h2>
+          <div className="space-y-6 text-sm text-gray-700 leading-[2.2] text-justify font-sans">
+            <p>
+              <strong>全国体育与社会调查（Chinese National Sports and Society Survey，简称 CNSSS）</strong>
+              是中国体育领域首个全国性、综合性、连续性的学术调查项目。项目由<strong>武汉体育学院</strong>牵头，联合<strong>中国人民大学中国调查与数据中心</strong>共同执行。
+            </p>
+            <p>
+              CNSSS 致力于建设具有国际学术水准、涵盖中国全境的体育社会学数据库。调查对象为中国大陆地区 18 岁及以上的城乡常住居民，内容深度覆盖体育参与、数字体育与社交、体育素养、体育消费、身心健康状况以及社会情境意愿等核心领域。
+            </p>
+            <p>
+              2024 年度调查采用多阶段分层随机抽样设计（PPS），覆盖全国 31 个省、自治区、直辖市，最终获得 11,385 份有效样本。通过系统地收集个人、家庭及社区层面的多维数据，CNSSS 旨在揭示社会变迁背景下中国居民体育生活的现状与趋势，为提升体育治理科学化水平、推动“运动促进健康”国家战略提供坚实的科学依据。
+            </p>
+          </div>
+        </div>
+      )}
+
+      {currentView === 'intro-guide' && (
+        <div className="bg-white p-10 border shadow-sm border-t-4 border-[#8B0000]">
+          <h2 className="text-2xl font-bold text-[#8B0000] border-b pb-2 mb-8 flex items-center">
+            <HelpCircle className="w-6 h-6 mr-2 text-[#C5A059]" /> 数据中心使用说明
+          </h2>
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="p-6 bg-gray-50 rounded border border-gray-100">
+                <h4 className="font-bold text-[#8B0000] mb-4 flex items-center"><span className="bg-[#8B0000] text-white w-5 h-5 rounded-full inline-flex items-center justify-center text-xs mr-2">1</span> 账户注册</h4>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  点击导航栏“用户注册”，如实填写您的姓名、所属单位及学术职称。请确保信息的真实性，我们将核实您的研究人员身份。
+                </p>
+              </div>
+              <div className="p-6 bg-gray-50 rounded border border-gray-100">
+                <h4 className="font-bold text-[#8B0000] mb-4 flex items-center"><span className="bg-[#8B0000] text-white w-5 h-5 rounded-full inline-flex items-center justify-center text-xs mr-2">2</span> 审核与登录</h4>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  系统管理员将在 1-3 个工作日内完成审核。审核通过后，您可以使用注册邮箱登录系统下载所需数据集。
+                </p>
+              </div>
+            </div>
+            <div className="bg-yellow-50 p-4 border-l-4 border-yellow-400">
+              <p className="text-xs text-yellow-800 italic">* 仅限学术研究用途，严禁转售或用于商业目的。</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  // --- 视图: 注册页面 ---
   const RegisterView = () => (
     <div className="animate-fadeIn max-w-2xl mx-auto py-8">
       <div className="bg-white shadow-2xl border-t-8 border-[#8B0000] rounded-sm overflow-hidden">
         <div className="p-8 md:p-12">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-bold text-gray-800">创建研究者账户</h2>
-            <p className="text-xs text-gray-500 mt-2 italic">—— 仅供学术研究使用，请提供真实有效的机构身份信息 ——</p>
+            <p className="text-xs text-gray-500 mt-2 italic">—— 请提供真实有效的身份信息以便通过审核 ——</p>
           </div>
 
           <form onSubmit={(e) => { e.preventDefault(); alert('演示系统：申请已提交。'); }} className="space-y-8">
@@ -161,32 +208,32 @@ const App = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-700 block">所属院校/单位 <span className="text-red-500">*</span></label>
-                <input type="text" required className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm" placeholder="例如：武汉体育学院" />
+                <input type="text" required className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm" placeholder="单位全称" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-700 block">电子邮箱 <span className="text-red-500">*</span></label>
-                <input type="email" required className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm" placeholder="建议使用 .edu 机构邮箱" />
+                <input type="email" required className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm" placeholder="联系邮箱" />
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-700 block">联系电话 <span className="text-red-500">*</span></label>
-                <input type="tel" required className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm" placeholder="常用联系手机" />
+                <input type="tel" required className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm" placeholder="手机号码" />
               </div>
             </div>
 
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-700 block">学术身份/职称 <span className="text-red-500">*</span></label>
-              <select required className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm bg-white">
-                <option value="" disabled selected>请选择您的当前身份</option>
-                <option>正高级 (Full Professor / 研究员)</option>
-                <option>副高级 (Associate Professor / 副研究员)</option>
-                <option>讲师 (Lecturer)</option>
-                <option>博士后 (Postdoc)</option>
-                <option>博士在读 (PhD Student)</option>
-                <option>硕士在读 (Master Student)</option>
-                <option>其他科研人员 (Others)</option>
+              <select required defaultValue="" className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm bg-white">
+                <option value="" disabled>请选择您的当前身份</option>
+                <option value="full_professor">正高级 (Full Professor / 研究员)</option>
+                <option value="assoc_professor">副高级 (Associate Professor / 副研究员)</option>
+                <option value="lecturer">讲师 (Lecturer)</option>
+                <option value="postdoc">博士后 (Postdoc)</option>
+                <option value="phd_student">博士在读 (PhD Student)</option>
+                <option value="master_student">硕士在读 (Master Student)</option>
+                <option value="other">其他</option>
               </select>
             </div>
 
@@ -198,28 +245,27 @@ const App = () => {
                 maxLength={200}
                 onChange={(e) => setPurposeText(e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-[#8B0000] outline-none text-sm resize-none" 
-                placeholder="请简述您的研究方向及拟使用数据的用途（200字以内）。"></textarea>
+                placeholder="200字以内。"></textarea>
               <p className={`text-[10px] text-right ${purposeText.length >= 200 ? 'text-red-600' : 'text-gray-400'}`}>已输入 {purposeText.length} / 200</p>
             </div>
 
             <div className="bg-gray-50 p-4 border border-gray-100 flex items-start space-x-3">
               <input type="checkbox" required className="mt-1 accent-[#8B0000]" id="terms" />
-              <label htmlFor="terms" className="text-[11px] text-gray-600 leading-relaxed cursor-pointer">
-                本人保证所提供的信息真实有效，并郑重承诺：下载的 CNSSS 数据仅用于学术研究，严格遵守数据安全协议，不向任何第三方转让原始数据，并在研究成果中按规范引用数据来源。
+              <label htmlFor="terms" className="text-[11px] text-gray-600 leading-relaxed cursor-pointer font-medium">
+                本人郑重承诺：下载数据仅用于学术研究，严格遵守安全协议，不转让原始数据，并在成果中引用数据来源。
               </label>
             </div>
 
             <button type="submit" className="w-full py-4 bg-[#8B0000] text-white font-bold text-sm tracking-widest shadow-lg hover:bg-[#660000] transition active:scale-[0.98]">
-              提交注册并申请数据访问
+              提交申请
             </button>
           </form>
         </div>
       </div>
-      <p className="text-center mt-6 text-xs text-gray-400">已有账号？ <button className="text-[#8B0000] font-bold underline">立即登录</button></p>
     </div>
   );
 
-  // --- 视图 3: 数据中心 ---
+  // --- 视图: 数据中心 ---
   const DataView = () => (
     <div className="animate-fadeIn flex flex-col lg:flex-row gap-8">
       <aside className="lg:w-1/4">
@@ -229,50 +275,50 @@ const App = () => {
           </div>
           <ul className="text-sm">
             <li className="p-4 border-b border-l-4 border-[#8B0000] bg-red-50 text-[#8B0000] font-bold">2024 年全国追踪调查</li>
-            <li className="p-4 border-b hover:bg-gray-50 transition cursor-pointer">2022 年预调查 (Pilot)</li>
-            <li className="p-4 hover:bg-gray-50 transition cursor-pointer">专项研究: 数字体育专题</li>
+            <li className="p-4 border-b hover:bg-gray-50 transition cursor-pointer">2023 年预调查</li>
+            <li className="p-4 hover:bg-gray-50 transition cursor-pointer font-medium text-gray-500">专项研究: 冰雪运动专题</li>
           </ul>
         </div>
       </aside>
       <div className="lg:w-3/4">
         <div className="bg-white border shadow-sm p-8">
-          <h2 className="text-2xl font-bold text-[#8B0000] border-b-2 border-[#8B0000] pb-2 mb-8">2024 年全国体育与社会调查数据</h2>
+          <h2 className="text-2xl font-bold text-[#8B0000] border-b-2 border-[#8B0000] pb-2 mb-8">2024 年全国体育与社会调查数据下载</h2>
           <div className="space-y-8">
             <div>
-              <h4 className="text-sm font-bold text-gray-800 mb-4 border-l-4 border-[#8B0000] pl-3">与数据使用相关的文档</h4>
+              <h4 className="text-sm font-bold text-gray-800 mb-4 border-l-4 border-[#8B0000] pl-3 text-sm">与数据使用相关的文档</h4>
               <div className="space-y-3 ml-4">
                 {dataFiles.slice(0, 2).map((f, i) => (
-                  <div key={i} className="flex items-start group">
+                  <div key={i} className="flex items-start">
                     <FileText className="w-4 h-4 text-red-600 mt-0.5 mr-3" />
                     <div>
-                      <button className="text-sm text-blue-800 hover:underline text-left">{f.name}</button>
-                      <p className="text-[10px] font-mono text-gray-400 mt-1">SHA1: {f.sha1}</p>
+                      <button className="text-sm text-blue-800 hover:underline text-left font-medium">{f.name}</button>
+                      <p className="text-[10px] font-mono text-gray-400 mt-1 uppercase">SHA1: {f.sha1}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-bold text-gray-800 mb-4 border-l-4 border-[#8B0000] pl-3">核心数据下载 (STATA/SPSS)</h4>
-              <div className="overflow-x-auto">
+              <h4 className="text-sm font-bold text-gray-800 mb-4 border-l-4 border-[#8B0000] pl-3 text-sm">核心数据模块 (STATA/SPSS)</h4>
+              <div className="overflow-x-auto border border-gray-100 rounded">
                 <table className="w-full text-sm border-collapse">
-                  <thead className="bg-gray-50 text-gray-600">
+                  <thead className="bg-gray-50 text-gray-600 text-xs">
                     <tr>
-                      <th className="border p-3 text-left">模块内容</th>
-                      <th className="border p-3 text-center">格式</th>
-                      <th className="border p-3 text-center">操作</th>
+                      <th className="border-b p-3 text-left">数据模块内容</th>
+                      <th className="border-b p-3 text-center">支持格式</th>
+                      <th className="border-b p-3 text-center">操作</th>
                     </tr>
                   </thead>
                   <tbody>
                     {dataFiles.slice(2).map((f, i) => (
-                      <tr key={i} className="hover:bg-gray-50 transition">
-                        <td className="border p-3">
-                          <p className="font-semibold text-gray-800">{f.name}</p>
-                          <p className="text-[10px] font-mono text-gray-400 mt-1">SHA1: {f.sha1}</p>
+                      <tr key={i} className="hover:bg-gray-50 transition border-b last:border-0">
+                        <td className="p-3">
+                          <p className="font-semibold text-gray-800 text-sm">{f.name}</p>
+                          <p className="text-[10px] font-mono text-gray-400 mt-1 uppercase">SHA1: {f.sha1}</p>
                         </td>
-                        <td className="border p-3 text-center text-xs text-gray-500 uppercase">{f.type}</td>
-                        <td className="border p-3 text-center">
-                          <button className="bg-gray-100 text-gray-600 px-3 py-1 rounded-sm text-xs hover:bg-[#8B0000] hover:text-white transition">
+                        <td className="p-3 text-center text-[10px] text-gray-500 font-bold uppercase">{f.type}</td>
+                        <td className="p-3 text-center">
+                          <button className="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-sm text-xs font-bold hover:bg-[#8B0000] hover:text-white transition">
                             <Download className="w-3 h-3 inline mr-1" /> 下载
                           </button>
                         </td>
@@ -282,45 +328,26 @@ const App = () => {
                 </table>
               </div>
             </div>
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 flex items-start space-x-3">
-              <Info className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-yellow-800 leading-relaxed">
-                温馨提示：数据下载权限仅向审核通过的账户开放。若您已注册，请确保登录后进行下载。引用数据请注明：CNSSS (2024) 全国体育与社会调查数据库。
-              </p>
-            </div>
           </div>
         </div>
       </div>
     </div>
   );
 
-  // --- 视图 4: 项目文档 (采样设计图示) ---
+  // --- 视图: 项目文档 ---
   const DocsView = () => (
     <div className="animate-fadeIn max-w-4xl mx-auto bg-white p-10 border shadow-sm border-t-4 border-[#8B0000]">
       <h2 className="text-2xl font-bold text-[#8B0000] border-b pb-2 mb-8">抽样设计方案</h2>
       <div className="space-y-8 text-sm text-gray-700 leading-relaxed text-justify">
-        <p>CNSSS 2024 年度调查采用了多阶段分层随机抽样设计（PPS），确保了样本对全国成年居民的高度代表性。</p>
+        <p>CNSSS 2024 采用多阶段分层随机抽样（PPS），代表了全国 18 岁以上成年人口的体育生活全貌。</p>
         <div className="bg-gray-50 p-10 border rounded-sm flex flex-col items-center">
            <div className="text-center mb-6">
-              <h4 className="font-bold text-[#8B0000]">2024 年度全国调查点分布示意</h4>
-              <p className="text-[10px] text-gray-400 mt-1">含南海诸岛及完整疆域示意 (国家标准版型参考)</p>
+              <h4 className="font-bold text-[#8B0000]">2024 年度全国调查覆盖范围图</h4>
+              <p className="text-[10px] text-gray-400 mt-1 tracking-widest uppercase">Coverage Overview</p>
            </div>
-           <div className="w-full max-w-md h-64 border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-gray-400 italic">
-             [ 此处集成了标准中国地图组件：包含 31 个省份的 125 个县级采样点打点展示 ]
-           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-           <div className="p-4 border-l-4 border-[#C5A059] bg-gray-50">
-             <h5 className="font-bold mb-2">第1阶段: PSU</h5>
-             <p className="text-xs opacity-70">按规模比例概率抽样选取县/区</p>
-           </div>
-           <div className="p-4 border-l-4 border-[#C5A059] bg-gray-50">
-             <h5 className="font-bold mb-2">第2阶段: SSU</h5>
-             <p className="text-xs opacity-70">随机抽取村/居委会作为基本调查单元</p>
-           </div>
-           <div className="p-4 border-l-4 border-[#C5A059] bg-gray-50">
-             <h5 className="font-bold mb-2">第3阶段: TSU</h5>
-             <p className="text-xs opacity-70">电子绘图法随机确定访谈家户与个人</p>
+           <div className="w-full max-w-md h-64 border-2 border-dashed border-gray-300 rounded flex flex-col items-center justify-center text-gray-400 italic">
+             <MapIcon className="w-12 h-12 mb-3 opacity-20" />
+             <span>[ 标准中国地图数据可视化组件加载中 ]</span>
            </div>
         </div>
       </div>
@@ -333,55 +360,68 @@ const App = () => {
       
       <main className="flex-grow container mx-auto px-4 py-10">
         {currentView === 'home' && <HomeView />}
-        {currentView === 'intro' && <div className="p-10 bg-white border text-center text-gray-400">项目概况视图建设中...</div>}
+        {currentView.startsWith('intro') && <IntroView />}
         {currentView === 'docs' && <DocsView />}
         {currentView === 'data' && <DataView />}
         {currentView === 'register' && <RegisterView />}
       </main>
 
+      {/* --- 页脚重构: 四大模块横向排列 --- */}
       <footer className="bg-[#1a1a1a] text-gray-400 py-12 border-t-8 border-[#8B0000]">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-center md:text-left">
-            <div>
-              <h4 className="text-white font-bold mb-4 border-b border-gray-700 pb-2 inline-block md:block">项目导航</h4>
-              <ul className="text-xs space-y-2">
-                <li><button onClick={() => navigateTo('home')} className="hover:text-white transition">首页展示</button></li>
-                <li><button onClick={() => navigateTo('intro')} className="hover:text-white transition">项目简介</button></li>
-                <li><button onClick={() => navigateTo('docs')} className="hover:text-white transition">抽样方案</button></li>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            {/* 1. 项目导航 */}
+            <div className="space-y-4">
+              <h4 className="text-white font-bold border-b border-gray-700 pb-2 text-sm tracking-widest">项目导航</h4>
+              <ul className="text-[11px] space-y-2.5">
+                <li><button onClick={() => navigateTo('home')} className="hover:text-white transition-colors">首页展示</button></li>
+                <li><button onClick={() => navigateTo('intro-overview')} className="hover:text-white transition-colors">项目概况</button></li>
+                <li><button onClick={() => navigateTo('intro-guide')} className="hover:text-white transition-colors">使用说明</button></li>
+                <li><button onClick={() => navigateTo('docs')} className="hover:text-white transition-colors">抽样方案</button></li>
               </ul>
             </div>
-            <div>
-              <h4 className="text-white font-bold mb-4 border-b border-gray-700 pb-2 inline-block md:block">资源下载</h4>
-              <ul className="text-xs space-y-2">
-                <li><button onClick={() => navigateTo('data')} className="hover:text-white transition">调查原始数据</button></li>
-                <li><button className="hover:text-white transition">技术手册下载</button></li>
-                <li><button className="hover:text-white transition">问卷下载</button></li>
+
+            {/* 2. 资源下载 */}
+            <div className="space-y-4">
+              <h4 className="text-white font-bold border-b border-gray-700 pb-2 text-sm tracking-widest">资源下载</h4>
+              <ul className="text-[11px] space-y-2.5">
+                <li><button onClick={() => navigateTo('data')} className="hover:text-white transition-colors">调查原始数据</button></li>
+                <li><button className="hover:text-white transition-colors">技术手册下载</button></li>
+                <li><button className="hover:text-white transition-colors">调查问卷下载</button></li>
+                <li><button className="hover:text-white transition-colors">公报全文 PDF</button></li>
               </ul>
             </div>
-            <div>
-              <h4 className="text-white font-bold mb-4 border-b border-gray-700 pb-2 inline-block md:block">快捷入口</h4>
-              <ul className="text-xs space-y-2">
-                <li><button onClick={() => navigateTo('register')} className="hover:text-white transition">注册申请权限</button></li>
-                <li><button className="hover:text-white transition">引用规范说明</button></li>
+
+            {/* 3. 快捷入口 */}
+            <div className="space-y-4">
+              <h4 className="text-white font-bold border-b border-gray-700 pb-2 text-sm tracking-widest">快捷入口</h4>
+              <ul className="text-[11px] space-y-2.5">
+                <li><button onClick={() => navigateTo('register')} className="hover:text-[#C5A059] font-bold transition-colors">注册申请权限</button></li>
+                <li><button className="hover:text-white transition-colors">引用规范说明</button></li>
+                <li><button className="hover:text-white transition-colors">常见问题 FAQ</button></li>
+                <li><button className="hover:text-white transition-colors">数据清理说明</button></li>
               </ul>
             </div>
-            <div>
-              <h4 className="text-white font-bold mb-4 border-b border-gray-700 pb-2 inline-block md:block">联系与支持</h4>
-              <p className="text-[10px] leading-relaxed">
-                武汉体育学院 & 中国人民大学<br />
-                中国调查与数据中心 (NSRC)<br />
-                邮箱: cnsss_data@whsu.edu.cn<br />
-                技术支持: 027-8719xxxx
-              </p>
+
+            {/* 4. 联系与支持 */}
+            <div className="space-y-4">
+              <h4 className="text-white font-bold border-b border-gray-700 pb-2 text-sm tracking-widest">联系与支持</h4>
+              <div className="text-[11px] leading-[2.2]">
+                <p className="flex items-center"><Mail className="w-3 h-3 mr-2" /> cnsss_data@whsu.edu.cn</p>
+                <p className="flex items-center"><ChevronRight className="w-3 h-3 mr-2 text-[#C5A059]" /> 027-8719xxxx (技术支持)</p>
+                <p className="mt-2 text-gray-500">湖北省武汉市珞瑜路461号</p>
+                <p className="text-gray-500">武汉体育学院 CNSSS 项目组</p>
+              </div>
             </div>
           </div>
+
+          {/* 底部版权与合作伙伴 */}
           <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-[10px] space-y-4 md:space-y-0 opacity-60">
-            <div className="flex space-x-6">
-              <span>中国人民大学</span>
-              <span>武汉体育学院</span>
-              <span>中国综合社会调查 (CGSS)</span>
+            <div className="flex space-x-6 font-medium">
+              <span className="text-white">武汉体育学院</span>
+              <span>中国体育社会调查网络 (CSSN)</span>
             </div>
-            <p>© 2024-2026 CNSSS 全国体育与社会调查项目组. 版权所有</p>
+            <p>© 2024-2026 CNSSS 全国体育与社会调查项目组. 保留所有权利</p>
           </div>
         </div>
       </footer>
